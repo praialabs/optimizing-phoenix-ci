@@ -35,6 +35,7 @@ style: |
     justify-content: center;
     align-items: center;
     text-align: center;
+    place-content: center;
   }
   section.lead h1, section.lead h2, section.lead h3, section.lead p {
     text-align: center;
@@ -44,7 +45,9 @@ style: |
     color: var(--color-text);
     font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, sans-serif;
     font-size: 26px;
-    padding: 38px 56px;
+    padding: 42px 56px 38px 56px;
+    place-content: start;
+    justify-content: flex-start;
   }
   h1 {
     color: #ffffff;
@@ -473,7 +476,7 @@ Speaker notes:
   <h3>SummaryFormatter (<a href="https://github.com/phoenixframework/phoenix/pull/6817">PR #6817</a>)</h3>
   <ul>
     <li>Custom lightweight ExUnit formatter.</li>
-    <li>Runs at <strong>full async concurrency</strong> (<code>max_cases: 20</code>).</li>
+    <li>Runs at <strong>full async concurrency</strong> (<code>max_cases: 8</code>).</li>
     <li>Preserves active timeout protection.</li>
     <li>Appends a structured Markdown duration table directly to <code>$GITHUB_STEP_SUMMARY</code>!</li>
   </ul>
@@ -486,6 +489,47 @@ Speaker notes:
 - PR 6825 broke down the shell script into distinct CI steps, so we could see how long each phase took.
 - PR 6817 created SummaryFormatter, turning GitHub Step Summary into a rich observability dashboard.
 - Now every PR showed exactly which test modules took the most time.
+-->
+
+---
+
+## Baseline Timeline: The Monolith in Action
+
+Timeline rendered by `SummaryFormatter` before splitting:
+
+![w:920 drop-shadow](assets/gantt_monolith_before.svg)
+
+<p style="font-size: 0.72em; color: var(--color-muted); text-align: center; margin-top: 8px;">
+  All 7 modules launch at 00:00. Fast modules finish early; 2 stragglers drag past 8 minutes.
+</p>
+
+<!--
+Speaker notes:
+- Look at this Mermaid chart—this was rendered directly into GITHUB_STEP_SUMMARY!
+- You can immediately see the problem: 7 bars, all starting at 0, but UmbrellaAppWithDefaultsTest drags out to 8 minutes 14 seconds.
+- After 6 minutes, almost everything else is done.
+-->
+
+---
+
+## The Straggler Effect: vCPUs Idling
+
+- Standard GitHub Actions Linux runners have **4 vCPUs** (16 GB RAM).
+- **What happened during execution:**
+  - $T = 0$: ExUnit starts all 7 modules (8 slots available).
+  - $T = 1\text{m}30\text{s}$: Fast modules finish (`AppWithNoOptionsTest`).
+  - $T = 7\text{m}00\text{s}$: Most modules finish.
+  - **$T = 7\text{m}$ to $8\text{m}+$:**
+    - **1~2 cores** still executing tests.
+    - **Other vCPUs sit completely idle** doing nothing!
+- The entire test suite wall-clock time was bounded by monolithic stragglers.
+
+<!--
+Speaker notes:
+- With 4 vCPUs, BEAM has 4 schedulers, so ExUnit provides 8 parallel worker slots by default.
+- But Phoenix only had 7 monolithic test files! Even at T=0, we couldn't saturate the runner.
+- And once the quick files finished, one worker grinded away past 8 minutes while everything else sat completely idle.
+- That idle tail is pure wasted wall-clock time.
 -->
 
 ---
@@ -510,47 +554,6 @@ Speaker notes:
 - When you write `use ExUnit.Case, async: true`, you might think all `test "..."` blocks run concurrently.
 - No! ExUnit spawns one worker process per module. All tests inside that module run one after another in serial order.
 - Parallelism only happens across different test files/modules.
--->
-
----
-
-## The Straggler Effect: 3 of 4 vCPUs Idling
-
-* Standard GitHub Actions Linux runners have **4 vCPUs** (16 GB RAM).
-* **What happened during execution:**
-  - $T = 0$: ExUnit starts all 7 modules across 4 worker cores.
-  - $T = 1\text{m}30\text{s}$: Fast modules finish (`AppWithNoOptionsTest`).
-  - $T = 4\text{m}00\text{s}$: Most modules finish.
-  - **$T = 4\text{m}$ to $8\text{m}+$:**
-    - **1 worker** pegged executing tests in `UmbrellaAppWithDefaultsTest`.
-    - **3 worker vCPUs sit completely idle** doing nothing!
-* The entire test suite wall-clock time was bounded by monolithic stragglers.
-
-<!--
-Speaker notes:
-- Picture this: You have 4 fast vCPUs.
-- For the first minute, all 4 cores are busy.
-- But once the smaller test files finish, you have one worker grinding away on a 4-minute monolithic file while the other 3 cores sit idle.
-- That idle tail is pure wasted wall-clock time.
--->
-
----
-
-## Baseline Timeline: The Monolith in Action
-
-Timeline rendered by `SummaryFormatter` before splitting:
-
-![w:920 drop-shadow](assets/gantt_monolith_before.svg)
-
-<p style="font-size: 0.72em; color: var(--color-muted); text-align: center; margin-top: 8px;">
-  All 7 modules launch at 00:00. Fast modules finish early; 2 stragglers drag past 8 minutes.
-</p>
-
-<!--
-Speaker notes:
-- Look at this Mermaid chart—this was rendered directly into GITHUB_STEP_SUMMARY!
-- You can immediately see the problem: 7 bars, all starting at 0, but UmbrellaAppWithDefaultsTest drags out to 8 minutes 14 seconds.
-- After 6 minutes, almost everything else is done.
 -->
 
 ---
@@ -662,7 +665,7 @@ Speaker notes:
 - **Problem:** Rendering 33 individual rows in a Gantt chart produces an unreadable 33-line wall of text.
 - **Solution in `SummaryFormatter`:**
   - Implemented **greedy interval scheduling** directly in Elixir!
-  - Assigns non-overlapping test modules to compact virtual worker lanes (`Lane 1` to `Lane 4`).
+  - Assigns non-overlapping test modules to compact virtual worker lanes (`Lane 1` to `Lane 8`).
   - Automatically tags the critical path module with `:crit`.
 
 ```elixir
@@ -677,7 +680,7 @@ end
 Speaker notes:
 - If you output 33 rows in Mermaid, the chart is gigantic and unreadable on GitHub.
 - So we used a classic greedy interval scheduling algorithm: when a test finishes, place the next test that started after it into the same lane.
-- This compresses 33 modules into 4 tidy lanes, perfectly matching the 4 vCPUs on the runner!
+- This compresses the suite into 8 tidy lanes, matching ExUnit's 8 concurrent worker slots (4 schedulers × 2)!
 -->
 
 ---
@@ -687,50 +690,14 @@ Speaker notes:
 ![w:920 drop-shadow](assets/gantt_worker_lanes_after.svg)
 
 <p style="font-size: 0.7em; color: var(--color-muted); text-align: center; margin-top: 8px;">
-  Cores stay 100% saturated. No worker sits idle waiting for a monolithic file.
+  All 8 ExUnit worker slots stay saturated across 4 vCPUs. No worker sits idle waiting for a monolithic file.
 </p>
 
 <!--
 Speaker notes:
 - Look at the difference compared to the first chart!
-- All 4 lanes are constantly working. When one module finishes, the next one immediately fills the slot.
+- All 8 lanes are constantly working. When one module finishes, the next one immediately fills the slot.
 - Total wall time dropped significantly because we eliminated the idle worker tail.
--->
-
----
-
-## Hygiene & Micro-Wins: Sleep Tax & Leaks
-
-<div class="grid-2">
-<div class="card">
-  <h3>Eliminating Blind Sleeps (<a href="https://github.com/phoenixframework/phoenix/pull/6830">PR #6830</a>)</h3>
-  <ul>
-    <li>Migration versions use 1-second timestamps (<code>YYYYMMDDHHMMSS</code>).</li>
-    <li>Chained generators (<code>phx.gen.auth</code> then <code>phx.gen.live</code>) called <code>Process.sleep(1500)</code> 8 times to prevent collisions.</li>
-    <li>Added <code>adjust_migration_timestamps/1</code>:
-      <ul>
-        <li>Backdates migrations on disk deterministically into the past.</li>
-        <li>Subsequent generators create fresh timestamps instantly with <strong>zero sleep latency</strong>!</li>
-      </ul>
-    </li>
-  </ul>
-</div>
-
-<div class="card">
-  <h3>10-Year Directory Leak (<a href="https://github.com/phoenixframework/phoenix/pull/6833">PR #6833</a>)</h3>
-  <ul>
-    <li>Consolidated generated app output into <code>installer/tmp/</code>.</li>
-    <li><strong>Git archaeology:</strong> Found that <code>with_installer_tmp/3</code> had been leaking empty random directories since <strong>2014</strong>!</li>
-    <li>Fixed the directory leak, leaving clean disk space for in-memory tmpfs mounts.</li>
-  </ul>
-</div>
-</div>
-
-<!--
-Speaker notes:
-- Two nice hygiene PRs that cleaned up technical debt.
-- The 1500ms sleep tax: 8 instances of sleeping 1.5 seconds. By backdating files on disk, we eliminated all sleeps entirely.
-- And the directory leak: dating back to when phoenix.new was extracted in 2014/2015. Clean teardown enabled the next big optimization: tmpfs.
 -->
 
 ---
@@ -978,10 +945,14 @@ _footer: ''
 -->
 # Thank You! Questions?
 
-**Rodolfo Carvalho** · [@rhcarvalho](https://github.com/rhcarvalho) · [<img class="inline-logo" src="assets/praialabs-logo.svg" alt="" />praialabs.com](https://www.praialabs.com/)
+<div style="display: inline-block; text-align: left; margin: 16px auto 0; font-size: 1.05em; line-height: 1.7;">
+  <div><strong>Rodolfo Carvalho</strong></div>
+  <div><a href="https://www.praialabs.com/"><img class="inline-logo" src="assets/praialabs-logo.svg" alt="" />praialabs.com</a></div>
+  <div>GitHub: <a href="https://github.com/rhcarvalho">@rhcarvalho</a></div>
+</div>
 
-<div style="margin-top: 36px; padding: 18px 28px; background: #1c1917; border-radius: 8px; border: 1px solid #292524; font-size: 0.85em; text-align: center;">
-  ❤️ Special thanks to <strong>Steffen Deusch</strong> (<a href="https://github.com/SteffenDE">@SteffenDE</a>) for co-maintaining Phoenix, exploring partition schemes, and reviewing PRs with patience and great insights!
+<div style="max-width: 760px; margin: 36px auto 0; padding: 18px 28px; background: #1c1917; border-radius: 8px; border: 1px solid #292524; font-size: 0.82em; text-align: center; line-height: 1.5;">
+  💜 Special thanks to <a href="https://github.com/SteffenDE"><strong>Steffen Deusch</strong></a> for maintaining Phoenix, exploring partition schemes, and reviewing PRs with patience and great insights!
 </div>
 
 <!--
@@ -994,7 +965,43 @@ Speaker notes:
 
 ---
 
-<!-- _header: Appendix -->
+<!-- header: Appendix -->
+
+## Appendix: Micro-Wins (AI-induced Tangents)
+
+<div class="grid-2">
+<div class="card">
+  <h3>Eliminating Blind Sleeps (<a href="https://github.com/phoenixframework/phoenix/pull/6830">PR #6830</a>)</h3>
+  <ul>
+    <li>Migration versions use 1-second timestamps (<code>YYYYMMDDHHMMSS</code>).</li>
+    <li>Chained generators (<code>phx.gen.auth</code> then <code>phx.gen.live</code>) called <code>Process.sleep(1500)</code> 8 times to prevent collisions.</li>
+    <li>Added <code>adjust_migration_timestamps/1</code>:
+      <ul>
+        <li>Backdates migrations on disk deterministically into the past.</li>
+        <li>Subsequent generators create fresh timestamps instantly with <strong>zero sleep latency</strong>!</li>
+      </ul>
+    </li>
+  </ul>
+</div>
+
+<div class="card">
+  <h3>10-Year Directory Leak (<a href="https://github.com/phoenixframework/phoenix/pull/6833">PR #6833</a>)</h3>
+  <ul>
+    <li>Consolidated generated app output into <code>installer/tmp/</code>.</li>
+    <li><strong>Git archaeology:</strong> Found that <code>with_installer_tmp/3</code> had been leaking empty random directories since <strong>2014</strong>!</li>
+    <li>Fixed the directory leak, leaving clean disk space for in-memory tmpfs mounts.</li>
+  </ul>
+</div>
+</div>
+
+<!--
+Speaker notes:
+- Two nice hygiene PRs that cleaned up technical debt.
+- The 1500ms sleep tax: 8 instances of sleeping 1.5 seconds. By backdating files on disk, we eliminated all sleeps entirely.
+- And the directory leak: dating back to when phoenix.new was extracted in 2014/2015. Clean teardown enabled the next big optimization: tmpfs.
+-->
+
+---
 
 ## Appendix: Upstream Pull Requests
 

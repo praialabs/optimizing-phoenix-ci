@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 360" width="100%" height="100%">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 380" width="100%" height="100%">
   <defs>
     <linearGradient id="critGrad" x1="0%" y1="0%" x2="100%" y2="0%">
       <stop offset="0%" stop-color="#fd4f00" />
@@ -13,107 +13,147 @@
       <stop offset="100%" stop-color="#249856" />
     </linearGradient>
   </defs>
-  <rect width="880" height="360" rx="10" fill="#141210" stroke="#292524" stroke-width="1.5" />
-  <text x="24" y="34" fill="#ffffff" font-family="system-ui, sans-serif" font-size="16" font-weight="700">Dynamic Worker Lane Allocation (PR #6826)</text>
-  <text x="856" y="34" text-anchor="end" fill="#2dc26e" font-family="monospace" font-size="12">4 Cores Saturated · 33 Async Modules</text>
-  
-    <line x1="110" y1="52" x2="110" y2="325" stroke="#292524" stroke-width="1" stroke-dasharray="4,4" />
-    <text x="110" y="342" text-anchor="middle" fill="#78716c" font-family="monospace" font-size="11">00:00</text>
-    
-    <line x1="259.31818181818187" y1="52" x2="259.31818181818187" y2="325" stroke="#292524" stroke-width="1" stroke-dasharray="4,4" />
-    <text x="259.31818181818187" y="342" text-anchor="middle" fill="#78716c" font-family="monospace" font-size="11">01:30</text>
-    
-    <line x1="408.6363636363637" y1="52" x2="408.6363636363637" y2="325" stroke="#292524" stroke-width="1" stroke-dasharray="4,4" />
-    <text x="408.6363636363637" y="342" text-anchor="middle" fill="#78716c" font-family="monospace" font-size="11">03:00</text>
-    
-    <line x1="557.9545454545455" y1="52" x2="557.9545454545455" y2="325" stroke="#292524" stroke-width="1" stroke-dasharray="4,4" />
-    <text x="557.9545454545455" y="342" text-anchor="middle" fill="#78716c" font-family="monospace" font-size="11">04:30</text>
-    
-    <line x1="707.2727272727274" y1="52" x2="707.2727272727274" y2="325" stroke="#292524" stroke-width="1" stroke-dasharray="4,4" />
-    <text x="707.2727272727274" y="342" text-anchor="middle" fill="#78716c" font-family="monospace" font-size="11">06:00</text>
-    
-    <line x1="806.8181818181819" y1="52" x2="806.8181818181819" y2="325" stroke="#292524" stroke-width="1" stroke-dasharray="4,4" />
-    <text x="806.8181818181819" y="342" text-anchor="middle" fill="#78716c" font-family="monospace" font-size="11">07:00</text>
-    
-    <text x="94" y="88" text-anchor="end" fill="#a8a29e" font-family="system-ui, sans-serif" font-size="13" font-weight="700">Lane 1</text>
-    <rect x="110" y="60" width="730" height="46" rx="4" fill="#1c1917" opacity="0.4" />
-    
-      <g>
-        <rect x="110" y="66" width="209.36363636363635" height="34" rx="4" fill="url(#barGrad1)" stroke="#141210" stroke-width="1" opacity="0.95" />
-        <text x="214.6818181818182" y="87" text-anchor="middle" fill="#ffffff" font-family="monospace" font-size="10.5" font-weight="600">PostgresAuthLive</text>
-      </g>
-      
-      <g>
-        <rect x="322.3636363636364" y="66" width="131.38636363636363" height="34" rx="4" fill="url(#barGrad2)" stroke="#141210" stroke-width="1" opacity="0.95" />
-        <text x="388.0568181818182" y="87" text-anchor="middle" fill="#ffffff" font-family="monospace" font-size="10.5" font-weight="600">PostgresLive</text>
-      </g>
-      
-      <g>
-        <rect x="456.75" y="66" width="184.47727272727275" height="34" rx="4" fill="url(#barGrad1)" stroke="#141210" stroke-width="1" opacity="0.95" />
-        <text x="548.9886363636364" y="87" text-anchor="middle" fill="#ffffff" font-family="monospace" font-size="10.5" font-weight="600">MySQLAuth</text>
-      </g>
-      
-      <g>
-        <rect x="644.2272727272727" y="66" width="133.04545454545456" height="34" rx="4" fill="url(#barGrad2)" stroke="#141210" stroke-width="1" opacity="0.95" />
-        <text x="710.75" y="87" text-anchor="middle" fill="#ffffff" font-family="monospace" font-size="10.5" font-weight="600">SQLite3Live</text>
-      </g>
-      
-    <text x="94" y="153" text-anchor="end" fill="#a8a29e" font-family="system-ui, sans-serif" font-size="13" font-weight="700">Lane 2</text>
-    <rect x="110" y="125" width="730" height="46" rx="4" fill="#1c1917" opacity="0.4" />
-    
-      <g>
-        <rect x="110" y="131" width="262.45454545454544" height="34" rx="4" fill="url(#critGrad)" stroke="#141210" stroke-width="1" opacity="0.95" />
-        <text x="241.22727272727272" y="152" text-anchor="middle" fill="#ffffff" font-family="monospace" font-size="10.5" font-weight="600">UmbrellaDefaults</text>
-      </g>
-      
-      <g>
-        <rect x="375.45454545454544" y="131" width="149.63636363636363" height="34" rx="4" fill="url(#barGrad2)" stroke="#141210" stroke-width="1" opacity="0.95" />
-        <text x="450.27272727272725" y="152" text-anchor="middle" fill="#ffffff" font-family="monospace" font-size="10.5" font-weight="600">MySQLScopes</text>
-      </g>
-      
-      <g>
-        <rect x="528.0909090909091" y="131" width="126.4090909090909" height="34" rx="4" fill="url(#barGrad1)" stroke="#141210" stroke-width="1" opacity="0.95" />
-        <text x="591.2954545454546" y="152" text-anchor="middle" fill="#ffffff" font-family="monospace" font-size="10.5" font-weight="600">MSSQLHtml</text>
-      </g>
-      
-      <g>
-        <rect x="657.5" y="131" width="143" height="34" rx="4" fill="url(#barGrad2)" stroke="#141210" stroke-width="1" opacity="0.95" />
-        <text x="729" y="152" text-anchor="middle" fill="#ffffff" font-family="monospace" font-size="10.5" font-weight="600">PostgresHtml</text>
-      </g>
-      
-    <text x="94" y="218" text-anchor="end" fill="#a8a29e" font-family="system-ui, sans-serif" font-size="13" font-weight="700">Lane 3</text>
-    <rect x="110" y="190" width="730" height="46" rx="4" fill="#1c1917" opacity="0.4" />
-    
-      <g>
-        <rect x="110" y="196" width="212.6818181818182" height="34" rx="4" fill="url(#barGrad1)" stroke="#141210" stroke-width="1" opacity="0.95" />
-        <text x="216.3409090909091" y="217" text-anchor="middle" fill="#ffffff" font-family="monospace" font-size="10.5" font-weight="600">SQLite3Auth</text>
-      </g>
-      
-      <g>
-        <rect x="325.6818181818182" y="196" width="216" height="34" rx="4" fill="url(#barGrad2)" stroke="#141210" stroke-width="1" opacity="0.95" />
-        <text x="433.6818181818182" y="217" text-anchor="middle" fill="#ffffff" font-family="monospace" font-size="10.5" font-weight="600">MSSQLAuthLive</text>
-      </g>
-      
-      <g>
-        <rect x="544.6818181818182" y="196" width="209.36363636363635" height="34" rx="4" fill="url(#barGrad1)" stroke="#141210" stroke-width="1" opacity="0.95" />
-        <text x="649.3636363636364" y="217" text-anchor="middle" fill="#ffffff" font-family="monospace" font-size="10.5" font-weight="600">UmbrellaLive</text>
-      </g>
-      
-    <text x="94" y="283" text-anchor="end" fill="#a8a29e" font-family="system-ui, sans-serif" font-size="13" font-weight="700">Lane 4</text>
-    <rect x="110" y="255" width="730" height="46" rx="4" fill="#1c1917" opacity="0.4" />
-    
-      <g>
-        <rect x="110" y="261" width="141.3409090909091" height="34" rx="4" fill="url(#barGrad1)" stroke="#141210" stroke-width="1" opacity="0.95" />
-        <text x="180.67045454545456" y="282" text-anchor="middle" fill="#ffffff" font-family="monospace" font-size="10.5" font-weight="600">NoOptions</text>
-      </g>
-      
-      <g>
-        <rect x="254.3409090909091" y="261" width="174.52272727272728" height="34" rx="4" fill="url(#barGrad2)" stroke="#141210" stroke-width="1" opacity="0.95" />
-        <text x="341.60227272727275" y="282" text-anchor="middle" fill="#ffffff" font-family="monospace" font-size="10.5" font-weight="600">PostgresJson</text>
-      </g>
-      
-      <g>
-        <rect x="431.8636363636364" y="261" width="239.22727272727275" height="34" rx="4" fill="url(#barGrad1)" stroke="#141210" stroke-width="1" opacity="0.95" />
-        <text x="551.4772727272727" y="282" text-anchor="middle" fill="#ffffff" font-family="monospace" font-size="10.5" font-weight="600">UmbrellaAuth</text>
-      </g>
-      </svg>
+  <rect width="880" height="380" rx="10" fill="#141210" stroke="#292524" stroke-width="1.5" />
+  <text x="24" y="30" fill="#ffffff" font-family="system-ui, sans-serif" font-size="15" font-weight="700">Dynamic Worker Lane Allocation (PR #6826)</text>
+  <text x="856" y="30" text-anchor="end" fill="#2dc26e" font-family="monospace" font-size="11.5">8 ExUnit Workers (4 Schedulers × 2) · Total 4m 39s</text>
+  <line x1="105" y1="40" x2="105" y2="346" stroke="#292524" stroke-width="1" stroke-dasharray="4,4" />
+  <text x="105" y="364" text-anchor="middle" fill="#78716c" font-family="monospace" font-size="11">00:00</text>
+  <line x1="255" y1="40" x2="255" y2="346" stroke="#292524" stroke-width="1" stroke-dasharray="4,4" />
+  <text x="255" y="364" text-anchor="middle" fill="#78716c" font-family="monospace" font-size="11">01:00</text>
+  <line x1="405" y1="40" x2="405" y2="346" stroke="#292524" stroke-width="1" stroke-dasharray="4,4" />
+  <text x="405" y="364" text-anchor="middle" fill="#78716c" font-family="monospace" font-size="11">02:00</text>
+  <line x1="555" y1="40" x2="555" y2="346" stroke="#292524" stroke-width="1" stroke-dasharray="4,4" />
+  <text x="555" y="364" text-anchor="middle" fill="#78716c" font-family="monospace" font-size="11">03:00</text>
+  <line x1="705" y1="40" x2="705" y2="346" stroke="#292524" stroke-width="1" stroke-dasharray="4,4" />
+  <text x="705" y="364" text-anchor="middle" fill="#78716c" font-family="monospace" font-size="11">04:00</text>
+  <line x1="855" y1="40" x2="855" y2="346" stroke="#292524" stroke-width="1" stroke-dasharray="4,4" />
+  <text x="855" y="364" text-anchor="middle" fill="#78716c" font-family="monospace" font-size="11">05:00</text>
+  <text x="94" y="66" text-anchor="end" fill="#a8a29e" font-family="system-ui, sans-serif" font-size="11.5" font-weight="700">Lane 1</text>
+  <rect x="105" y="46" width="750" height="32" rx="4" fill="#1c1917" opacity="0.4" />
+  <g>
+    <rect x="105" y="49" width="97.5" height="26" rx="4" fill="url(#barGrad1)" stroke="#141210" stroke-width="1" opacity="0.95" />
+    <text x="153.75" y="65" text-anchor="middle" fill="#ffffff" font-family="monospace" font-size="9.5" font-weight="600">MySQLHtml</text>
+  </g>
+  <g>
+    <rect x="202.5" y="49" width="200" height="26" rx="4" fill="url(#barGrad2)" stroke="#141210" stroke-width="1" opacity="0.95" />
+    <text x="302.5" y="65" text-anchor="middle" fill="#ffffff" font-family="monospace" font-size="9.5" font-weight="600">ScopesCustomRoutes</text>
+  </g>
+  <g>
+    <rect x="402.5" y="49" width="342.5" height="26" rx="4" fill="url(#barGrad1)" stroke="#141210" stroke-width="1" opacity="0.95" />
+    <text x="573.75" y="65" text-anchor="middle" fill="#ffffff" font-family="monospace" font-size="9.5" font-weight="600">UmbrellaPostgresAuth</text>
+  </g>
+  <text x="94" y="103" text-anchor="end" fill="#a8a29e" font-family="system-ui, sans-serif" font-size="11.5" font-weight="700">Lane 2</text>
+  <rect x="105" y="83" width="750" height="32" rx="4" fill="#1c1917" opacity="0.4" />
+  <g>
+    <rect x="105" y="86" width="117.5" height="26" rx="4" fill="url(#barGrad1)" stroke="#141210" stroke-width="1" opacity="0.95" />
+    <text x="163.75" y="102" text-anchor="middle" fill="#ffffff" font-family="monospace" font-size="9.5" font-weight="600">MSSQLLive</text>
+  </g>
+  <g>
+    <rect x="222.5" y="86" width="247.5" height="26" rx="4" fill="url(#barGrad2)" stroke="#141210" stroke-width="1" opacity="0.95" />
+    <text x="346.25" y="102" text-anchor="middle" fill="#ffffff" font-family="monospace" font-size="9.5" font-weight="600">ScopesJson</text>
+  </g>
+  <g>
+    <rect x="470" y="86" width="192.5" height="26" rx="4" fill="url(#barGrad1)" stroke="#141210" stroke-width="1" opacity="0.95" />
+    <text x="566.25" y="102" text-anchor="middle" fill="#ffffff" font-family="monospace" font-size="9.5" font-weight="600">PostgresHtml</text>
+  </g>
+  <text x="94" y="140" text-anchor="end" fill="#a8a29e" font-family="system-ui, sans-serif" font-size="11.5" font-weight="700">Lane 3</text>
+  <rect x="105" y="120" width="750" height="32" rx="4" fill="#1c1917" opacity="0.4" />
+  <g>
+    <rect x="105" y="123" width="162.5" height="26" rx="4" fill="url(#barGrad1)" stroke="#141210" stroke-width="1" opacity="0.95" />
+    <text x="186.25" y="139" text-anchor="middle" fill="#ffffff" font-family="monospace" font-size="9.5" font-weight="600">UmbrellaPostgresHtml</text>
+  </g>
+  <g>
+    <rect x="267.5" y="123" width="102.5" height="26" rx="4" fill="url(#barGrad2)" stroke="#141210" stroke-width="1" opacity="0.95" />
+    <text x="318.75" y="139" text-anchor="middle" fill="#ffffff" font-family="monospace" font-size="9.5" font-weight="600">MSSQLJson</text>
+  </g>
+  <g>
+    <rect x="370" y="123" width="162.5" height="26" rx="4" fill="url(#barGrad1)" stroke="#141210" stroke-width="1" opacity="0.95" />
+    <text x="451.25" y="139" text-anchor="middle" fill="#ffffff" font-family="monospace" font-size="9.5" font-weight="600">UmbrellaPostgres</text>
+  </g>
+  <g>
+    <rect x="532.5" y="123" width="80" height="26" rx="4" fill="url(#barGrad2)" stroke="#141210" stroke-width="1" opacity="0.95" />
+    <text x="572.5" y="139" text-anchor="middle" fill="#ffffff" font-family="monospace" font-size="9.5" font-weight="600">MySQLLive</text>
+  </g>
+  <g>
+    <rect x="612.5" y="123" width="90" height="26" rx="4" fill="url(#barGrad1)" stroke="#141210" stroke-width="1" opacity="0.95" />
+    <text x="657.5" y="139" text-anchor="middle" fill="#ffffff" font-family="monospace" font-size="9.5" font-weight="600">SQLite3Html</text>
+  </g>
+  <text x="94" y="177" text-anchor="end" fill="#a8a29e" font-family="system-ui, sans-serif" font-size="11.5" font-weight="700">Lane 4</text>
+  <rect x="105" y="157" width="750" height="32" rx="4" fill="#1c1917" opacity="0.4" />
+  <g>
+    <rect x="105" y="160" width="185" height="26" rx="4" fill="url(#barGrad1)" stroke="#141210" stroke-width="1" opacity="0.95" />
+    <text x="197.5" y="176" text-anchor="middle" fill="#ffffff" font-family="monospace" font-size="9.5" font-weight="600">UmbrellaPostgresJson</text>
+  </g>
+  <g>
+    <rect x="290" y="160" width="160" height="26" rx="4" fill="url(#barGrad2)" stroke="#141210" stroke-width="1" opacity="0.95" />
+    <text x="370" y="176" text-anchor="middle" fill="#ffffff" font-family="monospace" font-size="9.5" font-weight="600">MySQLScopes</text>
+  </g>
+  <g>
+    <rect x="450" y="160" width="100" height="26" rx="4" fill="url(#barGrad1)" stroke="#141210" stroke-width="1" opacity="0.95" />
+    <text x="500" y="176" text-anchor="middle" fill="#ffffff" font-family="monospace" font-size="9.5" font-weight="600">SQLite3Live</text>
+  </g>
+  <g>
+    <rect x="550" y="160" width="92.5" height="26" rx="4" fill="url(#barGrad2)" stroke="#141210" stroke-width="1" opacity="0.95" />
+    <text x="596.25" y="176" text-anchor="middle" fill="#ffffff" font-family="monospace" font-size="9.5" font-weight="600">SQLite3Json</text>
+  </g>
+  <g>
+    <rect x="642.5" y="160" width="72.5" height="26" rx="4" fill="url(#barGrad1)" stroke="#141210" stroke-width="1" opacity="0.95" />
+    <text x="678.75" y="176" text-anchor="middle" fill="#ffffff" font-family="monospace" font-size="9.5" font-weight="600">MySQLJson</text>
+  </g>
+  <text x="94" y="214" text-anchor="end" fill="#a8a29e" font-family="system-ui, sans-serif" font-size="11.5" font-weight="700">Lane 5</text>
+  <rect x="105" y="194" width="750" height="32" rx="4" fill="#1c1917" opacity="0.4" />
+  <g>
+    <rect x="105" y="197" width="150" height="26" rx="4" fill="url(#barGrad1)" stroke="#141210" stroke-width="1" opacity="0.95" />
+    <text x="180" y="213" text-anchor="middle" fill="#ffffff" font-family="monospace" font-size="9.5" font-weight="600">ScopesLive</text>
+  </g>
+  <g>
+    <rect x="255" y="197" width="412.5" height="26" rx="4" fill="url(#critGrad)" stroke="#141210" stroke-width="1" opacity="0.95" />
+    <text x="461.25" y="213" text-anchor="middle" fill="#ffffff" font-family="monospace" font-size="9.5" font-weight="600">SQLite3Auth</text>
+  </g>
+  <text x="94" y="251" text-anchor="end" fill="#a8a29e" font-family="system-ui, sans-serif" font-size="11.5" font-weight="700">Lane 6</text>
+  <rect x="105" y="231" width="750" height="32" rx="4" fill="#1c1917" opacity="0.4" />
+  <g>
+    <rect x="105" y="234" width="185" height="26" rx="4" fill="url(#barGrad1)" stroke="#141210" stroke-width="1" opacity="0.95" />
+    <text x="197.5" y="250" text-anchor="middle" fill="#ffffff" font-family="monospace" font-size="9.5" font-weight="600">UmbrellaPostgresLive</text>
+  </g>
+  <g>
+    <rect x="290" y="234" width="160" height="26" rx="4" fill="url(#barGrad2)" stroke="#141210" stroke-width="1" opacity="0.95" />
+    <text x="370" y="250" text-anchor="middle" fill="#ffffff" font-family="monospace" font-size="9.5" font-weight="600">Postgres</text>
+  </g>
+  <g>
+    <rect x="450" y="234" width="322.5" height="26" rx="4" fill="url(#barGrad1)" stroke="#141210" stroke-width="1" opacity="0.95" />
+    <text x="611.25" y="250" text-anchor="middle" fill="#ffffff" font-family="monospace" font-size="9.5" font-weight="600">PostgresAuth</text>
+  </g>
+  <text x="94" y="288" text-anchor="end" fill="#a8a29e" font-family="system-ui, sans-serif" font-size="11.5" font-weight="700">Lane 7</text>
+  <rect x="105" y="268" width="750" height="32" rx="4" fill="#1c1917" opacity="0.4" />
+  <g>
+    <rect x="105" y="271" width="185" height="26" rx="4" fill="url(#barGrad1)" stroke="#141210" stroke-width="1" opacity="0.95" />
+    <text x="197.5" y="287" text-anchor="middle" fill="#ffffff" font-family="monospace" font-size="9.5" font-weight="600">PostgresLive</text>
+  </g>
+  <g>
+    <rect x="290" y="271" width="145" height="26" rx="4" fill="url(#barGrad2)" stroke="#141210" stroke-width="1" opacity="0.95" />
+    <text x="362.5" y="287" text-anchor="middle" fill="#ffffff" font-family="monospace" font-size="9.5" font-weight="600">MinimalApp</text>
+  </g>
+  <g>
+    <rect x="435" y="271" width="332.5" height="26" rx="4" fill="url(#barGrad1)" stroke="#141210" stroke-width="1" opacity="0.95" />
+    <text x="601.25" y="287" text-anchor="middle" fill="#ffffff" font-family="monospace" font-size="9.5" font-weight="600">MySQLAuth</text>
+  </g>
+  <text x="94" y="325" text-anchor="end" fill="#a8a29e" font-family="system-ui, sans-serif" font-size="11.5" font-weight="700">Lane 8</text>
+  <rect x="105" y="305" width="750" height="32" rx="4" fill="#1c1917" opacity="0.4" />
+  <g>
+    <rect x="105" y="308" width="185" height="26" rx="4" fill="url(#barGrad1)" stroke="#141210" stroke-width="1" opacity="0.95" />
+    <text x="197.5" y="324" text-anchor="middle" fill="#ffffff" font-family="monospace" font-size="9.5" font-weight="600">PostgresJson</text>
+  </g>
+  <g>
+    <rect x="290" y="308" width="107.5" height="26" rx="4" fill="url(#barGrad2)" stroke="#141210" stroke-width="1" opacity="0.95" />
+    <text x="343.75" y="324" text-anchor="middle" fill="#ffffff" font-family="monospace" font-size="9.5" font-weight="600">MSSQLHtml</text>
+  </g>
+  <g>
+    <rect x="397.5" y="308" width="150" height="26" rx="4" fill="url(#barGrad1)" stroke="#141210" stroke-width="1" opacity="0.95" />
+    <text x="472.5" y="324" text-anchor="middle" fill="#ffffff" font-family="monospace" font-size="9.5" font-weight="600">ScopesHtml</text>
+  </g>
+  <g>
+    <rect x="547.5" y="308" width="255" height="26" rx="4" fill="url(#barGrad2)" stroke="#141210" stroke-width="1" opacity="0.95" />
+    <text x="675" y="324" text-anchor="middle" fill="#ffffff" font-family="monospace" font-size="9.5" font-weight="600">MSSQLAuth</text>
+  </g>
+</svg>
