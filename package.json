@@ -1,0 +1,12 @@
+{
+  "name": "phoenix-integration-test-slides",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Presentation: Lessons from Optimizing Phoenix Integration Tests for Elixir Vienna Meetup",
+  "scripts": {
+    "dev": "npx @marp-team/marp-cli -s . --html -p",
+    "preview": "npx @marp-team/marp-cli -p --html slides.md",
+    "build:html": "mkdir -p dist && npx @marp-team/marp-cli --html slides.md -o dist/index.html",
+    "build:pdf": "mkdir -p dist && npx @marp-team/marp-cli --html --allow-local-files slides.md -o dist/slides.pdf"
+  }
+}
