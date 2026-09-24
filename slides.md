@@ -300,6 +300,64 @@ Speaker notes:
 
 ---
 
+## About Me & Praia Labs
+
+<div class="grid-2">
+<div class="card">
+  <h3><span class="badge">Background</span> Building with LiveView</h3>
+  <ul>
+    <li>Built and scaled <strong>SaaS product</strong> on Phoenix LiveView over the past few years.</li>
+    <li>Now consulting through <strong>Praia Labs</strong>, helping teams design, build, and scale applications with Phoenix &amp; LiveView.</li>
+    <li>Navigating AI-assisted development, mostly staying in the driver's seat.</li>
+  </ul>
+</div>
+
+<div class="card">
+  <h3><span class="badge badge-orange">Philosophy</span> Caring for Dependencies</h3>
+  <ul>
+    <li>Long-time contributor to <strong>Phoenix</strong>, <strong>LiveView</strong>, <strong>Hex</strong>, and the Elixir ecosystem.</li>
+    <li><strong>Why work upstream?</strong>
+      <ul>
+        <li>A strong belief in giving back and actively <em>caring for our dependencies</em>.</li>
+        <li>Investing in upstream speed and stability benefits every developer in the room.</li>
+      </ul>
+    </li>
+  </ul>
+</div>
+</div>
+
+<!--
+Speaker notes:
+- A quick 30 seconds on where I'm coming from:
+- For the past few years, I built a SaaS product entirely on Phoenix LiveView.
+- Recently, I launched Praia Labs, where I consult and help other engineering teams build, optimize, and scale production systems with Phoenix and LiveView.
+- Throughout this journey, I've contributed upstream to Phoenix, LiveView, Hex, and other Elixir core tooling.
+- I believe deeply in giving back and caring for our dependencies—when upstream tools are fast, transparent, and pleasant to work with, the entire ecosystem wins.
+-->
+
+---
+
+<!--
+_class: lead
+_header: ''
+-->
+## Waiting for Long Builds
+
+![h:420 drop-shadow](assets/xkcd_303_compiling.png)
+
+<p style="text-align: center; font-size: 0.75em; color: var(--color-muted); margin-top: 10px;">
+  <em>"The #1 Programmer Excuse for Legitimately Slacking Off: My code's compiling."</em> (XKCD #303)
+</p>
+
+<!--
+Speaker notes:
+- A mandatory slide for any CI talk!
+- 10 minutes is that awkward duration: too long to stare at the screen, too short to start working on a completely different deep feature.
+- You lose context, check social media, grab coffee, and lose flow.
+-->
+
+---
+
 ## Context: Testing Phoenix Itself (Upstream)
 
 <div class="grid-2">
@@ -340,13 +398,13 @@ Speaker notes:
 
 The Phoenix repository contains **4 distinct test suites**:
 
-* <span class="badge badge-orange">Unit & Core</span> **`/test`**:
+- <span class="badge badge-orange">Unit & Core</span> **`/test`**:
   Unit & functional tests for framework internals (Router, Endpoint, Channels, PubSub).
-* <span class="badge badge-purple">Installer</span> **`/installer/test`**:
+- <span class="badge badge-purple">Installer</span> **`/installer/test`**:
   Validates `mix phx.new` scaffolding logic (does it generate expected files & trees?).
-* <span class="badge badge-purple">Generators</span> **`/test/mix/tasks/`**:
+- <span class="badge badge-purple">Generators</span> **`/test/mix/tasks/`**:
   Validates `phx.gen.html`, `phx.gen.live`, `phx.gen.auth` code generation against mocked apps.
-* <span class="badge">Integration</span> **`/integration_test`**:
+- <span class="badge">Integration</span> **`/integration_test`**:
   **The real deal.** Generates a complete app on disk, runs generators, compiles with `--warnings-as-errors`, verifies `mix format`, connects to real databases, migrates, and runs `mix test` inside the generated app!
 
 <!--
@@ -355,38 +413,6 @@ Speaker notes:
 - People often think installer tests are integration tests.
 - But installer/test just checks if templates render without running them.
 - /integration_test actually generates the whole application, boots live databases (Postgres, MySQL, MSSQL, SQLite), drops/creates databases, runs migrations, and invokes `mix test` inside the generated project.
--->
-
----
-
-## Evolution: 2020 Scaffolding to 2024 Reality
-
-<div class="grid-2">
-<div class="card">
-  <h3>The Origin (2020 - 2021)</h3>
-  <ul>
-    <li><strong>Late 2020:</strong> Aaron Renner introduces <code>/integration_test</code> (PRs <a href="https://github.com/phoenixframework/phoenix/pull/3970">#3970</a>, <a href="https://github.com/phoenixframework/phoenix/pull/4027">#4027</a>).</li>
-    <li><strong>Jan 2021:</strong> Blog post celebrates <strong>Earthly</strong> for reproducible local & CI builds.</li>
-    <li>Containerized build matrix with Docker Compose backing services.</li>
-  </ul>
-</div>
-
-<div class="card">
-  <h3>The Drift (2021 - 2024)</h3>
-  <ul>
-    <li><strong>May 2024:</strong> Earthly dropped by Steffen Deusch (<a href="https://github.com/phoenixframework/phoenix/pull/5817">PR #5817</a>) due to local developer friction.</li>
-    <li>Replaced with simple <code>docker.sh</code> and Docker Compose.</li>
-    <li><strong>Leftover CI debt:</strong> Tests still executed via a monolithic <code>test.sh</code> inside an Alpine Docker container.</li>
-  </ul>
-</div>
-</div>
-
-<!--
-Speaker notes:
-- Aaron Renner's 2021 blog post "Improving Testing & Continuous Integration in Phoenix" laid the groundwork.
-- Earthly had a great promise: run CI builds locally with identical containers.
-- But by 2024, it became a point of friction for contributors when things broke locally.
-- When Earthly was removed in PR #5817, what was left in CI was a monolithic `test.sh` script running inside a nested Alpine container.
 -->
 
 ---
@@ -409,27 +435,6 @@ Speaker notes:
 - As a long-time contributor, this was deeply personal. Every small PR meant waiting 10 minutes.
 - The buffering detail is subtle but brutal: ExUnit prints single dots as tests pass. But GitHub Actions buffers output. So you don't even get dots!
 - You just see a spinning circle with no lines emitted for nearly 10 minutes.
--->
-
----
-
-<!--
-_class: lead
-_header: ''
--->
-## Waiting for Long Builds
-
-![h:420 drop-shadow](assets/xkcd_303_compiling.png)
-
-<p style="text-align: center; font-size: 0.75em; color: var(--color-muted); margin-top: 10px;">
-  <em>"The #1 Programmer Excuse for Legitimately Slacking Off: My code's compiling."</em> (XKCD #303)
-</p>
-
-<!--
-Speaker notes:
-- A mandatory slide for any CI talk!
-- 10 minutes is that awkward duration: too long to stare at the screen, too short to start working on a completely different deep feature.
-- You lose context, check social media, grab coffee, and lose flow.
 -->
 
 ---
@@ -832,31 +837,6 @@ Speaker notes:
 
 ---
 
-## Local Workflow Ergonomics
-
-CI improvements should **never** make local development painful!
-
-* **Apple Silicon (`arm64`) Auto-Detection in `docker.sh`:**
-  - Official Microsoft SQL Server image only supports `amd64`.
-  - Detects architecture via `uname -m`; automatically skips MSSQL on ARM64 macs instead of crashing under emulation.
-* **Warm Database Containers:**
-  - `docker.sh` keeps database containers alive between runs.
-  - Re-running tests has **zero container boot latency**!
-  - Run `./docker.sh down` when you're done for the day.
-* **Non-Root & Port Isolation:**
-  - Container runs as non-root user (no root-owned file pollution).
-  - Named volumes for native NIFs (`bcrypt`, `argon2`).
-  - Database ports bind to loopback (`127.0.0.1`), preventing host port collisions.
-
-<!--
-Speaker notes:
-- Don't optimize CI at the expense of local developers!
-- On Apple Silicon, MSSQL crashes or crawls under Rosetta emulation. We detect ARM64 and cleanly skip MSSQL locally.
-- Backing containers stay warm between test runs, so iterating locally is instantaneous.
--->
-
----
-
 ## AI Pair Programming: Blessing & Curse
 
 Using AI coding assistants (Gemini / Antigravity) throughout this journey:
@@ -967,7 +947,64 @@ Speaker notes:
 
 <!-- header: Appendix -->
 
-## Appendix: Micro-Wins (AI-induced Tangents)
+## Evolution from 2020 Scaffolding to 2024 Reality
+
+<div class="grid-2">
+<div class="card">
+  <h3>The Origin (2020 - 2021)</h3>
+  <ul>
+    <li><strong>Late 2020:</strong> Aaron Renner introduces <code>/integration_test</code> (PRs <a href="https://github.com/phoenixframework/phoenix/pull/3970">#3970</a>, <a href="https://github.com/phoenixframework/phoenix/pull/4027">#4027</a>).</li>
+    <li><strong>Jan 2021:</strong> Blog post celebrates <strong>Earthly</strong> for reproducible local & CI builds.</li>
+    <li>Containerized build matrix with Docker Compose backing services.</li>
+  </ul>
+</div>
+
+<div class="card">
+  <h3>The Drift (2021 - 2024)</h3>
+  <ul>
+    <li><strong>May 2024:</strong> Earthly dropped by Steffen Deusch (<a href="https://github.com/phoenixframework/phoenix/pull/5817">PR #5817</a>) due to local developer friction.</li>
+    <li>Replaced with simple <code>docker.sh</code> and Docker Compose.</li>
+    <li><strong>Leftover CI debt:</strong> Tests still executed via a monolithic <code>test.sh</code> inside an Alpine Docker container.</li>
+  </ul>
+</div>
+</div>
+
+<!--
+Speaker notes:
+- Aaron Renner's 2021 blog post "Improving Testing & Continuous Integration in Phoenix" laid the groundwork.
+- Earthly had a great promise: run CI builds locally with identical containers.
+- But by 2024, it became a point of friction for contributors when things broke locally.
+- When Earthly was removed in PR #5817, what was left in CI was a monolithic `test.sh` script running inside a nested Alpine container.
+-->
+
+---
+
+## Local Workflow Ergonomics
+
+CI improvements should **never** make local development painful!
+
+- **Apple Silicon (`arm64`) Auto-Detection in `docker.sh`:**
+  - Official Microsoft SQL Server image only supports `amd64`.
+  - Detects architecture via `uname -m`; automatically skips MSSQL on ARM64 macs instead of crashing under emulation.
+- **Warm Database Containers:**
+  - `docker.sh` keeps database containers alive between runs.
+  - Re-running tests has **zero container boot latency**!
+  - Run `./docker.sh down` when you're done for the day.
+- **Non-Root & Port Isolation:**
+  - Container runs as non-root user (no root-owned file pollution).
+  - Named volumes for native NIFs (`bcrypt`, `argon2`).
+  - Database ports bind to loopback (`127.0.0.1`), preventing host port collisions.
+
+<!--
+Speaker notes:
+- Don't optimize CI at the expense of local developers!
+- On Apple Silicon, MSSQL crashes or crawls under Rosetta emulation. We detect ARM64 and cleanly skip MSSQL locally.
+- Backing containers stay warm between test runs, so iterating locally is instantaneous.
+-->
+
+---
+
+## Micro-Wins (AI-Induced Tangents)
 
 <div class="grid-2">
 <div class="card">
@@ -1003,7 +1040,7 @@ Speaker notes:
 
 ---
 
-## Appendix: Upstream Pull Requests
+## Upstream Pull Requests
 
 - **[PR #6817](https://github.com/phoenixframework/phoenix/pull/6817)**: Add `SummaryFormatter` for integration test visibility in CI
 - **[PR #6825](https://github.com/phoenixframework/phoenix/pull/6825)**: Decompose CI workflow steps & improve container reliability
