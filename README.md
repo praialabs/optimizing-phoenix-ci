@@ -1,63 +1,26 @@
 # Lessons from Optimizing Phoenix Integration Tests
 
-## Presentation for Elixir Vienna Meetup (Sep 24, 2026)
+Presentation for the [Elixir Vienna Meetup](https://www.meetup.com/elixir-vienna/) (September 24, 2026).
 
-This presentation is authored using [Marp](https://marp.app/).
+## View the Slides
 
-## Quick Start
+- **Interactive Slides (HTML):** [praialabs.github.io/optimizing-phoenix-ci](https://praialabs.github.io/optimizing-phoenix-ci/)
+- **Download Deck (PDF):** [praialabs.github.io/optimizing-phoenix-ci/slides.pdf](https://praialabs.github.io/optimizing-phoenix-ci/slides.pdf)
 
-### 1. Live Preview & Presenter Mode
+## Overview
 
-To start a live-reloading preview server with speaker notes:
+From 10-minute opaque black box to 3-minute transparent CI: A deep dive into optimizing the upstream Phoenix Framework integration test suite (`phoenixframework/phoenix`).
 
-```bash
-npm run dev
-```
+### Topics Covered
 
-- Open your browser to the local server URL (e.g. `http://localhost:8080/slides.md`).
-- Press **`P`** to toggle **Presenter View** (shows speaker notes, timer, next slide preview).
-- Press **`F`** for Fullscreen presentation.
+- ExUnit concurrency model and module-level scheduling
+- Greedy interval scheduling for compact Gantt timelines
+- In-memory `tmpfs` mounts and native host runners
+- Upstream test database sharding (PostgreSQL, MySQL, MSSQL, SQLite3)
+- Real CI observability with custom formatters
 
-### 2. Export to Standalone HTML
+---
 
-Build a self-contained HTML presentation in `dist/index.html`:
+Presented by **Rodolfo Carvalho** ([@rhcarvalho](https://github.com/rhcarvalho)) · [Praia Labs](https://www.praialabs.com/)
 
-```bash
-npm run build:html
-```
-
-### 3. Export to PDF Slides
-
-Generate a PDF deck (requires Chromium / Chrome installed):
-
-```bash
-npm run build:pdf
-```
-
-### 4. Build All (HTML & PDF)
-
-```bash
-npm run build
-```
-
-## GitHub Pages Deployment
-
-Pushing to `main` automatically triggers the GitHub Actions workflow in `.github/workflows/deploy.yml` which builds both `index.html` and `slides.pdf` and deploys them to GitHub Pages.
-
-To enable in the GitHub repository:
-- Go to **Settings** $\rightarrow$ **Pages**
-- Set **Source** to **GitHub Actions**
-
-## Directory Structure
-
-```
-.
-├── .github/workflows/ # GitHub Actions Pages deployment
-├── assets/            # Images, diagrams, and logos
-├── dist/              # Generated HTML & PDF output (gitignored)
-├── package.json       # Build and dev scripts
-├── postprocess.js     # HTML post-processing script
-├── README.md          # Presentation guide
-└── slides.md          # Marp slide source
-```
-
+_Authored with [Marp](https://marp.app/). For local preview, build scripts, and development instructions, see [CONTRIBUTING.md](CONTRIBUTING.md)._
