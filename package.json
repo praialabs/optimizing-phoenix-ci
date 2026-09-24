@@ -3,10 +3,14 @@
   "version": "1.0.0",
   "private": true,
   "description": "Presentation: Lessons from Optimizing Phoenix Integration Tests for Elixir Vienna Meetup",
+  "engines": {
+    "node": ">=24.0.0"
+  },
   "scripts": {
-    "dev": "npx @marp-team/marp-cli -s . --html -p",
-    "preview": "npx @marp-team/marp-cli -p --html slides.md",
-    "build:html": "mkdir -p dist && npx @marp-team/marp-cli --html slides.md -o dist/index.html",
-    "build:pdf": "mkdir -p dist && npx @marp-team/marp-cli --html --allow-local-files slides.md -o dist/slides.pdf"
+    "dev": "npx --yes @marp-team/marp-cli@4.5.1 -s . --html -p",
+    "preview": "npx --yes @marp-team/marp-cli@4.5.1 -p --html slides.md",
+    "build:html": "mkdir -p dist && npx --yes @marp-team/marp-cli@4.5.1 --html slides.md -o dist/index.html && node postprocess.js",
+    "build:pdf": "mkdir -p dist && npx --yes @marp-team/marp-cli@4.5.1 --html --allow-local-files slides.md -o dist/slides.pdf",
+    "build": "npm run build:html && npm run build:pdf"
   }
 }

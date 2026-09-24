@@ -1,28 +1,48 @@
 ---
 marp: true
-theme: gaia
-_class: lead
+theme: default
+size: 16:9
 paginate: true
-backgroundColor: #0f172a
-color: #f8fafc
-header: 'Lessons from Optimizing Phoenix Integration Tests · Elixir Vienna'
-footer: 'Rodolfo Carvalho · Sep 24, 2026'
+backgroundColor: '#0c0a09'
+color: '#f5f5f4'
+header: 'Lessons from Optimizing Phoenix Integration Tests'
+footer: 'Rodolfo Carvalho [<img class="footer-logo" src="assets/praialabs-logo.svg" alt="" />praialabs.com](https://www.praialabs.com/)'
 html: true
 style: |
   :root {
-    --color-primary: #fd4f00;
-    --color-secondary: #38bdf8;
-    --color-accent: #a855f7;
-    --color-bg: #0f172a;
-    --color-surface: #1e293b;
-    --color-border: #334155;
-    --color-text: #f8fafc;
-    --color-muted: #94a3b8;
+    /* Praia Labs Brand Palette */
+    --color-brand: #1a6f3f;
+    --color-brand-light: #249856;
+    --color-brand-bright: #2dc26e;
+    --color-brand-dark: #104628;
+
+    /* Theme Tokens */
+    --color-primary: #2dc26e;        /* Praia brand emerald */
+    --color-secondary: #249856;      /* Praia brand light emerald */
+    --color-phoenix: #fd4f00;        /* Phoenix flame orange */
+    --color-bg: #0c0a09;             /* Stone 950 deep dark background */
+    --color-surface: #1c1917;        /* Stone 900 surface / cards */
+    --color-surface-hover: #292524;  /* Stone 800 */
+    --color-border: #292524;         /* Stone 800 subtle borders */
+    --color-border-light: #44403c;   /* Stone 700 border */
+    --color-text: #f5f5f4;           /* Stone 100 high-contrast body */
+    --color-text-muted: #d6d3d1;     /* Stone 300 readable secondary */
+    --color-muted: #a8a29e;          /* Stone 400 headers, footers, meta */
+  }
+  section.lead {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+  }
+  section.lead h1, section.lead h2, section.lead h3, section.lead p {
+    text-align: center;
   }
   section {
     background-color: var(--color-bg);
     color: var(--color-text);
-    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, sans-serif;
     font-size: 26px;
     padding: 38px 56px;
   }
@@ -30,6 +50,7 @@ style: |
     color: #ffffff;
     font-size: 1.8em;
     margin-bottom: 0.3em;
+    letter-spacing: -0.02em;
   }
   h2 {
     color: #ffffff;
@@ -38,28 +59,36 @@ style: |
     margin-bottom: 0.4em;
     border-bottom: 2px solid var(--color-border);
     padding-bottom: 8px;
+    letter-spacing: -0.01em;
   }
   h3 {
-    color: var(--color-secondary);
+    color: var(--color-primary);
     font-size: 1.1em;
     margin-bottom: 0.2em;
   }
   strong {
     color: var(--color-primary);
+    font-weight: 600;
   }
   a {
-    color: var(--color-secondary);
+    color: var(--color-primary);
     text-decoration: none;
+    transition: color 0.15s ease;
+  }
+  a:hover {
+    color: #4ade80;
+    text-decoration: underline;
   }
   code {
     background-color: var(--color-surface);
-    color: #38bdf8;
+    color: var(--color-primary);
+    border: 1px solid var(--color-border);
     padding: 2px 6px;
     border-radius: 4px;
     font-size: 0.88em;
   }
   pre {
-    background-color: #020617 !important;
+    background-color: #060504 !important;
     border: 1px solid var(--color-border);
     border-radius: 8px;
     font-size: 0.72em;
@@ -68,7 +97,9 @@ style: |
   }
   pre code {
     background-color: transparent !important;
+    border: none;
     padding: 0;
+    color: #e7e5e4;
   }
   ul, ol {
     margin-top: 0.4em;
@@ -99,8 +130,9 @@ style: |
   }
   .badge {
     display: inline-block;
-    background-color: var(--color-primary);
-    color: white;
+    background-color: var(--color-brand);
+    color: #ffffff;
+    border: 1px solid var(--color-brand-light);
     padding: 2px 10px;
     border-radius: 12px;
     font-size: 0.65em;
@@ -108,34 +140,37 @@ style: |
     vertical-align: middle;
     margin-right: 6px;
   }
-  .badge-blue {
-    background-color: #0284c7;
+  .badge-orange {
+    background-color: rgba(253, 79, 0, 0.2);
+    border: 1px solid var(--color-phoenix);
+    color: #ffedd5;
   }
   .badge-purple {
-    background-color: #7c3aed;
+    background-color: #6b21a8;
+    border: 1px solid #7c3aed;
+    color: #f3e8ff;
   }
   .badge-green {
-    background-color: #16a34a;
+    background-color: var(--color-brand);
+    border: 1px solid var(--color-brand-light);
+    color: #ffffff;
   }
-  .center-img {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-top: 10px;
+  img {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
   }
-  .center-img img {
-    max-height: 420px;
-    border-radius: 8px;
-    border: 1px solid var(--color-border);
+  img[src*="xkcd"] {
     background-color: #ffffff;
+    border-radius: 8px;
     padding: 8px;
   }
   .metric-box {
     text-align: center;
     padding: 12px;
-    background: #1e293b;
+    background: var(--color-surface);
     border-radius: 8px;
-    border: 1px solid #334155;
+    border: 1px solid var(--color-border);
   }
   .metric-val {
     font-size: 1.8em;
@@ -146,26 +181,154 @@ style: |
     font-size: 0.7em;
     color: var(--color-muted);
   }
-  header, footer {
+  header {
     font-size: 0.52em;
     color: var(--color-muted);
   }
+  footer {
+    font-size: 0.52em;
+    color: var(--color-muted);
+  }
+  footer a {
+    color: var(--color-primary);
+    text-decoration: none;
+    font-weight: 500;
+    margin-left: 24px;
+  }
+  footer a:hover {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+  .footer-logo {
+    display: inline-block;
+    height: 13px;
+    width: 13px;
+    vertical-align: -1.5px;
+    margin-right: 3px;
+    margin-left: 0;
+  }
+  .inline-logo {
+    display: inline-block;
+    height: 1.05em;
+    width: 1.05em;
+    vertical-align: -0.15em;
+    margin-right: 3px;
+    margin-left: 0;
+  }
+  table {
+    display: table !important;
+    width: 100% !important;
+    border-collapse: separate !important;
+    border-spacing: 0 !important;
+    margin: 16px 0 !important;
+    font-size: 0.72em !important;
+    background-color: var(--color-surface) !important;
+    border: 1px solid var(--color-border) !important;
+    border-radius: 8px !important;
+    overflow: hidden !important;
+  }
+  table tr {
+    background-color: var(--color-surface) !important;
+    border-top: none !important;
+  }
+  table tr:nth-child(2n) {
+    background-color: #141210 !important;
+  }
+  table th {
+    background-color: #110f0e !important;
+    color: var(--color-primary) !important;
+    font-weight: 600 !important;
+    padding: 10px 14px !important;
+    border: none !important;
+    border-bottom: 1px solid var(--color-border) !important;
+  }
+  table td {
+    padding: 8px 14px !important;
+    color: var(--color-text) !important;
+    border: none !important;
+    border-bottom: 1px solid var(--color-border) !important;
+  }
+  table tr:last-child td {
+    border-bottom: none !important;
+  }
+  table code {
+    background-color: #0c0a09 !important;
+    color: var(--color-primary) !important;
+    border: 1px solid var(--color-border) !important;
+    padding: 2px 6px !important;
+    border-radius: 4px !important;
+  }
 ---
 
-<!-- _class: lead -->
+<!--
+_class: lead
+_paginate: skip
+_header: ''
+_footer: ''
+-->
 # Lessons from Optimizing<br>Phoenix Integration Tests
-### From a 10-Minute Black Box to 3.5-Minute Transparent CI
 
-**Rodolfo Carvalho** · `@rhcarvalho`
-Elixir Vienna Meetup · September 24, 2026
-*doloops accessible web technologies · Wien*
+![w:340 drop-shadow](assets/phoenix-logo.png)
+
+### From 10-Minute Black Box to 3-Minute Transparent CI
+
+<div style="display: flex; justify-content: space-between; align-items: flex-start; max-width: 720px; width: 100%; margin: 36px auto 0 auto; padding-top: 20px; border-top: 1px solid var(--color-border); font-size: 0.8em; text-align: left;">
+  <div>
+    <div style="font-weight: 700; color: #ffffff; font-size: 1.1em;">Rodolfo Carvalho</div>
+    <div style="margin-top: 5px;">
+      <a href="https://www.praialabs.com/" target="_blank" rel="noopener noreferrer" style="color: var(--color-primary); font-weight: 500;">
+        <img class="inline-logo" src="assets/praialabs-logo.svg" alt="" />praialabs.com
+      </a>
+    </div>
+  </div>
+  <div style="text-align: right;">
+    <div style="font-weight: 600; color: #f5f5f4;">Elixir Vienna Meetup</div>
+    <div style="margin-top: 5px; color: var(--color-muted);">September 24, 2026</div>
+  </div>
+</div>
 
 <!--
 Speaker notes:
 - Welcome everyone! Thank you for having me at Elixir Vienna.
 - Tonight I want to share a hands-on, practical journey deep into the Phoenix Framework test infrastructure.
 - If you've contributed to Phoenix or run large test suites in your own production apps, you know the pain of slow, opaque CI.
-- We're going to see how we took Phoenix integration tests from 10 minutes down to ~3.5 minutes, and the hard-won lessons along the way.
+- We're going to see how we took Phoenix integration tests from 10 minutes down to ~3 minutes, and the hard-won lessons along the way.
+-->
+
+---
+
+## Context: Testing Phoenix Itself (Upstream)
+
+<div class="grid-2">
+<div class="card">
+  <h3><span class="badge">Scope</span> Framework, Not an App</h3>
+  <p>We are <strong>not</strong> talking about testing a typical app built with Phoenix.</p>
+  <p>We are testing <strong>Phoenix itself</strong> (<code>phoenixframework/phoenix</code>):</p>
+  <ul>
+    <li>Testing code generation output end-to-end.</li>
+    <li>Matrix across supported Elixir &amp; OTP versions.</li>
+    <li>Compatibility with 4 database engines: PostgreSQL, MySQL, MSSQL, SQLite3.</li>
+  </ul>
+</div>
+
+<div class="card">
+  <h3><span class="badge badge-orange">Universal</span> Why This Matters to You</h3>
+  <p>The lessons and wins apply to <strong>any project</strong>:</p>
+  <ul>
+    <li><strong>ExUnit concurrency model:</strong> How tests actually get scheduled across CPU cores.</li>
+    <li><strong>Observability:</strong> Custom formatters &amp; CI step summaries.</li>
+    <li><strong>Universal speedups:</strong> In-memory <code>tmpfs</code> RAM disks, caching tricks, and Docker ergonomics.</li>
+  </ul>
+</div>
+</div>
+
+<!--
+Speaker notes:
+- Important clarification right at the start!
+- When people see "Phoenix testing", they usually assume it's about testing an app built with Phoenix (like testing controllers or LiveViews).
+- This is about testing the framework itself upstream in the core Phoenix repository.
+- Every release of Phoenix must guarantee that `mix phx.new` and all generators produce 100% valid, warning-free, perfectly formatted code that passes all tests across multiple Elixir, OTP, and database combinations.
+- BUT: the techniques we'll cover—ExUnit scheduling, CI formatting, tmpfs, container caching—are universal and apply to every team in this room.
 -->
 
 ---
@@ -174,7 +337,7 @@ Speaker notes:
 
 The Phoenix repository contains **4 distinct test suites**:
 
-* <span class="badge badge-blue">Unit & Core</span> **`/test`**:
+* <span class="badge badge-orange">Unit & Core</span> **`/test`**:
   Unit & functional tests for framework internals (Router, Endpoint, Channels, PubSub).
 * <span class="badge badge-purple">Installer</span> **`/installer/test`**:
   Validates `mix phx.new` scaffolding logic (does it generate expected files & trees?).
@@ -199,7 +362,7 @@ Speaker notes:
 <div class="card">
   <h3>The Origin (2020 - 2021)</h3>
   <ul>
-    <li><strong>Late 2020:</strong> Aaron Renner introduces <code>/integration_test</code> (PRs #3970, #4027).</li>
+    <li><strong>Late 2020:</strong> Aaron Renner introduces <code>/integration_test</code> (PRs <a href="https://github.com/phoenixframework/phoenix/pull/3970">#3970</a>, <a href="https://github.com/phoenixframework/phoenix/pull/4027">#4027</a>).</li>
     <li><strong>Jan 2021:</strong> Blog post celebrates <strong>Earthly</strong> for reproducible local & CI builds.</li>
     <li>Containerized build matrix with Docker Compose backing services.</li>
   </ul>
@@ -208,7 +371,7 @@ Speaker notes:
 <div class="card">
   <h3>The Drift (2021 - 2024)</h3>
   <ul>
-    <li><strong>May 2024:</strong> Earthly dropped by Steffen Deusch (PR #5817) due to local developer friction.</li>
+    <li><strong>May 2024:</strong> Earthly dropped by Steffen Deusch (<a href="https://github.com/phoenixframework/phoenix/pull/5817">PR #5817</a>) due to local developer friction.</li>
     <li>Replaced with simple <code>docker.sh</code> and Docker Compose.</li>
     <li><strong>Leftover CI debt:</strong> Tests still executed via a monolithic <code>test.sh</code> inside an Alpine Docker container.</li>
   </ul>
@@ -229,14 +392,14 @@ Speaker notes:
 
 * Every Phoenix PR carried an opaque **~10-minute CI tax**.
 * **Worse than dots (`....`):**
-  * CI runners buffer standard output line-by-line or by chunk.
-  * Because ExUnit outputs progress dots without newlines, **dots didn't stream interactively!**
-  * You literally stared at an empty spinning wheel for 8–10 minutes with zero feedback.
+  - CI runners buffer standard output line-by-line or by chunk.
+  - Because ExUnit outputs progress dots without newlines, **dots didn't stream interactively!**
+  - You literally stared at an empty spinning wheel for 8–10 minutes with zero feedback.
 * **The Developer Anxiety:**
-  * Did MSSQL hang on startup?
-  * Is `mix deps.get` stalled on a network timeout?
-  * Did compilation fail?
-  * Nobody could tell until the whole job finished or timed out.
+  - Did MSSQL hang on startup?
+  - Is `mix deps.get` stalled on a network timeout?
+  - Did compilation fail?
+  - Nobody could tell until the whole job finished or timed out.
 
 <!--
 Speaker notes:
@@ -247,12 +410,13 @@ Speaker notes:
 
 ---
 
-<!-- _class: lead -->
+<!--
+_class: lead
+_header: ''
+-->
 ## Waiting for Long Builds
 
-<div class="center-img">
-  <img src="assets/xkcd_303_compiling.png" alt="XKCD 303: Compiling" />
-</div>
+![h:420 drop-shadow](assets/xkcd_303_compiling.png)
 
 <p style="text-align: center; font-size: 0.75em; color: var(--color-muted); margin-top: 10px;">
   <em>"The #1 Programmer Excuse for Legitimately Slacking Off: My code's compiling."</em> (XKCD #303)
@@ -272,11 +436,11 @@ Speaker notes:
 ### The Intuitive First Attempt: `mix test --slowest`
 * ExUnit provides `--slowest N` and `--slowest-modules`.
 * **The Profiling Trap:**
-  * In ExUnit, passing `--slowest` automatically forces `--trace`!
-  * `--trace` sets `--max-cases 1` (forcing all async tests to run **serially**) and sets `timeout: :infinity`!
-  * Profiling destroyed the suite's concurrency and blew up wall-clock time!
+  - In ExUnit, passing `--slowest` automatically forces `--trace`!
+  - `--trace` sets `--max-cases 1` (forcing all async tests to run **serially**) and sets `timeout: :infinity`!
+  - Profiling destroyed the suite's concurrency and blew up wall-clock time!
 * **Job-Level Opacity:**
-  * Monolithic `test.sh` bundled system packages, DB boot, dependency fetch, compilation, and test execution into a single timed blob.
+  - Monolithic `test.sh` bundled system packages, DB boot, dependency fetch, compilation, and test execution into a single timed blob.
 
 <!--
 Speaker notes:
@@ -287,11 +451,11 @@ Speaker notes:
 
 ---
 
-## Stage 1: Gaining Visibility (PR #6825 & #6817)
+## Stage 1: Gaining Visibility ([PR #6825](https://github.com/phoenixframework/phoenix/pull/6825) & [PR #6817](https://github.com/phoenixframework/phoenix/pull/6817))
 
 <div class="grid-2">
 <div class="card">
-  <h3>CI Step Decomposition (PR #6825)</h3>
+  <h3>CI Step Decomposition (<a href="https://github.com/phoenixframework/phoenix/pull/6825">PR #6825</a>)</h3>
   <ul>
     <li>Replaced monolithic <code>test.sh</code> with discrete GitHub Actions workflow steps.</li>
     <li>Surfaced exact phase timings in the Actions UI:
@@ -306,7 +470,7 @@ Speaker notes:
 </div>
 
 <div class="card">
-  <h3>SummaryFormatter (PR #6817)</h3>
+  <h3>SummaryFormatter (<a href="https://github.com/phoenixframework/phoenix/pull/6817">PR #6817</a>)</h3>
   <ul>
     <li>Custom lightweight ExUnit formatter.</li>
     <li>Runs at <strong>full async concurrency</strong> (<code>max_cases: 20</code>).</li>
@@ -329,8 +493,8 @@ Speaker notes:
 ## Revelation #1: ExUnit's Scheduling Model
 
 * How does ExUnit run asynchronous tests?
-  * ExUnit parallelizes across **modules** (`async: true`).
-  * BUT tests *within a single module* run **serially** on one process!
+  - ExUnit parallelizes across **modules** (`async: true`).
+  - BUT tests *within a single module* run **serially** on one process!
 * Phoenix had only **7 monolithic test files**:
   1. `AppWithDefaultsTest` (12 tests)
   2. `UmbrellaAppWithDefaultsTest` (10 tests)
@@ -354,12 +518,12 @@ Speaker notes:
 
 * Standard GitHub Actions Linux runners have **4 vCPUs** (16 GB RAM).
 * **What happened during execution:**
-  * $T = 0$: ExUnit starts all 7 modules across 4 worker cores.
-  * $T = 1\text{m}30\text{s}$: Fast modules finish (`AppWithNoOptionsTest`).
-  * $T = 4\text{m}00\text{s}$: Most modules finish.
-  * **$T = 4\text{m}$ to $8\text{m}+$:**
-    * **1 worker** pegged executing tests in `UmbrellaAppWithDefaultsTest`.
-    * **3 worker vCPUs sit completely idle** doing nothing!
+  - $T = 0$: ExUnit starts all 7 modules across 4 worker cores.
+  - $T = 1\text{m}30\text{s}$: Fast modules finish (`AppWithNoOptionsTest`).
+  - $T = 4\text{m}00\text{s}$: Most modules finish.
+  - **$T = 4\text{m}$ to $8\text{m}+$:**
+    - **1 worker** pegged executing tests in `UmbrellaAppWithDefaultsTest`.
+    - **3 worker vCPUs sit completely idle** doing nothing!
 * The entire test suite wall-clock time was bounded by monolithic stragglers.
 
 <!--
@@ -374,24 +538,11 @@ Speaker notes:
 
 ## Baseline Timeline: The Monolith in Action
 
-Here is the actual Gantt timeline rendered by `SummaryFormatter` before splitting:
+Timeline rendered by `SummaryFormatter` before splitting:
 
-```mermaid
-gantt
-    title Monolithic Module Timeline (Before Optimization)
-    dateFormat mm:ss
-    axisFormat %M:%S
-    section Monolithic Suites
-    UmbrellaAppWithDefaultsTest :crit, active, 00:00, 08:14
-    AppWithDefaultsTest         :active, 00:00, 08:04
-    AppWithMySqlAdapterTest     :active, 00:00, 07:16
-    AppWithScopesTest           :active, 00:00, 06:39
-    AppWithMSSQLAdapterTest     :active, 00:00, 06:27
-    AppWithSQLite3AdapterTest   :active, 00:00, 06:17
-    AppWithNoOptionsTest        :active, 00:00, 01:34
-```
+![w:920 drop-shadow](assets/gantt_monolith_before.svg)
 
-<p style="font-size: 0.72em; color: var(--color-muted); text-align: center;">
+<p style="font-size: 0.72em; color: var(--color-muted); text-align: center; margin-top: 8px;">
   All 7 modules launch at 00:00. Fast modules finish early; 2 stragglers drag past 8 minutes.
 </p>
 
@@ -404,12 +555,38 @@ Speaker notes:
 
 ---
 
-<!-- _class: lead -->
+<!--
+_class: lead
+_header: ''
+-->
+## Famous Last Words...
+
+![w:520 drop-shadow](assets/rodolfo-not-signing-up-for-that.png)
+
+<p style="text-align: center; font-size: 0.8em; color: var(--color-muted); margin-top: 18px;">
+  <em>August 31: "I'm not signing up for that right now :)"</em><br>
+  <strong>Spoiler:</strong> He went on to sign up for exactly that.
+</p>
+
+<!--
+Speaker notes:
+- This is a real quote from August 31st during early architecture discussions with Steffen.
+- With 50+ tests, could we run more than 8 concurrently?
+- My immediate, rational response: "I'm not signing up for that right now :) (it takes a lot of time iterating on this, AI or not)".
+- It felt like too big of an undertaking with too many moving pieces.
+- But as engineers... the temptation to fix the inefficiency never really leaves your mind.
+- Which brings us directly to...
+-->
+
+---
+
+<!--
+_class: lead
+_header: ''
+-->
 ## "I'll Just Automate It!"
 
-<div class="center-img">
-  <img src="assets/xkcd_1319_automation.png" alt="XKCD 1319: Automation" />
-</div>
+![h:420 drop-shadow](assets/xkcd_1319_automation.png)
 
 <p style="text-align: center; font-size: 0.75em; color: var(--color-muted); margin-top: 10px;">
   <em>"Theory: Work on original task permanently reduced. Reality: Rethinking, debugging, ongoing development..."</em> (XKCD #1319)
@@ -423,19 +600,19 @@ Speaker notes:
 
 ---
 
-## Stage 2: Breaking the Monolith (PR #6826)
+## Stage 2: Breaking the Monolith ([PR #6826](https://github.com/phoenixframework/phoenix/pull/6826))
 
 * Split **7 monolithic files** into **33 focused async modules**:
-  * `app_with_postgres_adapter_auth_html_test.exs`
-  * `app_with_postgres_adapter_auth_live_test.exs`
-  * `app_with_postgres_adapter_html_test.exs`
-  * `app_with_postgres_adapter_json_test.exs`
-  * `app_with_postgres_adapter_live_test.exs`
-  * ...and symmetrical counterparts for MySQL, MSSQL, SQLite, & Umbrella!
+  - `app_with_postgres_adapter_auth_html_test.exs`
+  - `app_with_postgres_adapter_auth_live_test.exs`
+  - `app_with_postgres_adapter_html_test.exs`
+  - `app_with_postgres_adapter_json_test.exs`
+  - `app_with_postgres_adapter_live_test.exs`
+  - ...and symmetrical counterparts for MySQL, MSSQL, SQLite, & Umbrella!
 * **Guarantees:**
-  * Preserved all **53 original tests**.
-  * Every module designed to execute in **under 3 minutes**.
-  * ExUnit now dynamically saturates all runner cores from start to finish!
+  - Preserved all **53 original tests**.
+  - Every module designed to execute in **under 3 minutes**.
+  - ExUnit now dynamically saturates all runner cores from start to finish!
 
 <!--
 Speaker notes:
@@ -482,11 +659,11 @@ Speaker notes:
 
 ## Greedy Interval Scheduling for Gantt Charts
 
-* **Problem:** Rendering 33 individual rows in a Gantt chart produces an unreadable 33-line wall of text.
-* **Solution in `SummaryFormatter`:**
-  * Implemented **greedy interval scheduling** directly in Elixir!
-  * Assigns non-overlapping test modules to compact virtual worker lanes (`Lane 1` to `Lane 4`).
-  * Automatically tags the critical path module with `:crit`.
+- **Problem:** Rendering 33 individual rows in a Gantt chart produces an unreadable 33-line wall of text.
+- **Solution in `SummaryFormatter`:**
+  - Implemented **greedy interval scheduling** directly in Elixir!
+  - Assigns non-overlapping test modules to compact virtual worker lanes (`Lane 1` to `Lane 4`).
+  - Automatically tags the critical path module with `:crit`.
 
 ```elixir
 defp assign_to_lane([], item, acc), do: Enum.reverse([[item] | acc])
@@ -507,36 +684,9 @@ Speaker notes:
 
 ## Compact Gantt Timeline (Worker Lanes)
 
-```mermaid
----
-displayMode: compact
----
-gantt
-    title Dynamic Worker Lane Allocation (PR #6826)
-    dateFormat mm:ss
-    axisFormat %M:%S
-    todayMarker off
-    section Lane 1
-    PostgresAuthLiveTest   :active, 00:00, 02:08
-    PostgresLiveTest       :active, 02:08, 03:29
-    MySQLAuthTest          :active, 03:29, 05:22
-    SQLite3LiveTest        :active, 05:22, 06:44
-    section Lane 2
-    UmbrellaDefaultsTest   :crit, active, 00:00, 02:40
-    MySQLScopesTest        :active, 02:40, 04:12
-    MSSQLHtmlTest          :active, 04:12, 05:30
-    PostgresHtmlTest       :active, 05:30, 06:58
-    section Lane 3
-    SQLite3AuthTest        :active, 00:00, 02:10
-    MSSQLAuthLiveTest      :active, 02:10, 04:22
-    UmbrellaLiveTest       :active, 04:22, 06:30
-    section Lane 4
-    NoOptionsTest          :active, 00:00, 01:27
-    PostgresJsonTest       :active, 01:27, 03:14
-    UmbrellaAuthTest       :active, 03:14, 05:40
-```
+![w:920 drop-shadow](assets/gantt_worker_lanes_after.svg)
 
-<p style="font-size: 0.7em; color: var(--color-muted); text-align: center;">
+<p style="font-size: 0.7em; color: var(--color-muted); text-align: center; margin-top: 8px;">
   Cores stay 100% saturated. No worker sits idle waiting for a monolithic file.
 </p>
 
@@ -553,7 +703,7 @@ Speaker notes:
 
 <div class="grid-2">
 <div class="card">
-  <h3>Eliminating Blind Sleeps (PR #6830)</h3>
+  <h3>Eliminating Blind Sleeps (<a href="https://github.com/phoenixframework/phoenix/pull/6830">PR #6830</a>)</h3>
   <ul>
     <li>Migration versions use 1-second timestamps (<code>YYYYMMDDHHMMSS</code>).</li>
     <li>Chained generators (<code>phx.gen.auth</code> then <code>phx.gen.live</code>) called <code>Process.sleep(1500)</code> 8 times to prevent collisions.</li>
@@ -567,7 +717,7 @@ Speaker notes:
 </div>
 
 <div class="card">
-  <h3>10-Year Directory Leak (PR #6833)</h3>
+  <h3>10-Year Directory Leak (<a href="https://github.com/phoenixframework/phoenix/pull/6833">PR #6833</a>)</h3>
   <ul>
     <li>Consolidated generated app output into <code>installer/tmp/</code>.</li>
     <li><strong>Git archaeology:</strong> Found that <code>with_installer_tmp/3</code> had been leaking empty random directories since <strong>2014</strong>!</li>
@@ -585,18 +735,18 @@ Speaker notes:
 
 ---
 
-## Infrastructure: Host Runners & tmpfs (PR #6831)
+## Infrastructure: Host Runners & tmpfs ([PR #6831](https://github.com/phoenixframework/phoenix/pull/6831))
 
 * **Migrated from Alpine Container to Native Ubuntu Runner:**
-  * Ran directly on `ubuntu-24.04` host using `erlef/setup-beam`.
-  * Pre-installed system build tools (no more `apk add` latency).
-  * Removed background `socat` TCP proxy bridges (ports bind directly to `localhost`).
+  - Ran directly on `ubuntu-24.04` host using `erlef/setup-beam`.
+  - Pre-installed system build tools (no more `apk add` latency).
+  - Removed background `socat` TCP proxy bridges (ports bind directly to `localhost`).
 * **Dependency & Build Caching:**
-  * Enabled `actions/cache` for `deps/` and `_build/` keyed on `mix.lock`.
-  * Saves **~50 seconds** of dependency re-compilation on warm runs!
+  - Enabled `actions/cache` for `deps/` and `_build/` keyed on `mix.lock`.
+  - Saves **~50 seconds** of dependency re-compilation on warm runs!
 * **Mounted `installer/tmp` on `tmpfs` (RAM Disk):**
-  * Integration tests generate apps, copying dependencies & compiling code repeatedly.
-  * Running file I/O entirely in RAM eliminated disk bottlenecks!
+  - Integration tests generate apps, copying dependencies & compiling code repeatedly.
+  - Running file I/O entirely in RAM eliminated disk bottlenecks!
 
 <!--
 Speaker notes:
@@ -613,7 +763,7 @@ Steffen Deusch and I explored two horizontal scaling strategies:
 
 <div class="grid-2">
 <div class="card">
-  <h3>Generic Partitions (PR #6834)</h3>
+  <h3>Generic Partitions (<a href="https://github.com/phoenixframework/phoenix/pull/6834">PR #6834</a>)</h3>
   <p><code>mix test --test-partition 4</code></p>
   <ul>
     <li>Great for self-contained unit tests!</li>
@@ -624,7 +774,7 @@ Steffen Deusch and I explored two horizontal scaling strategies:
 </div>
 
 <div class="card">
-  <h3>Database Sharding (PR #6836)</h3>
+  <h3>Database Sharding (<a href="https://github.com/phoenixframework/phoenix/pull/6836">PR #6836</a>)</h3>
   <p><code>[postgresql]</code>, <code>[mysql]</code>, <code>[mssql]</code>, <code>[none]</code></p>
   <ul>
     <li>Shard strictly by backing database service.</li>
@@ -652,20 +802,20 @@ Speaker notes:
 
 ## Cross-Shard Summary Aggregation
 
-* **The Problem:** 8 parallel CI jobs = 8 separate GitHub Step Summaries.
-  * Fragmented, cluttered, and hard to spot the overall critical path.
-* **The Solution (`aggregate_summary.exs`):**
+- **The Problem:** 8 parallel CI jobs = 8 separate GitHub Step Summaries.
+  - Fragmented, cluttered, and hard to spot the overall critical path.
+- **The Solution (`aggregate_summary.exs`):**
   1. Each shard writes a lightweight `summary.json` (a few KB).
   2. Uploaded as temporary workflow artifacts.
   3. A final aggregator job downloads the JSON files and compiles a unified dashboard:
 
-| Elixir/OTP | Job Shard | Status | Tests | Wall Time | Slowest Test |
+| Elixir/OTP | Job | Status | Tests | Wall Time | Slowest Test |
 | :--- | :--- | :---: | :---: | :---: | :--- |
-| **1.20 / 29** | **Combined** | **Passed** | **53** | **`3m 19s`** | `Umbrella Live (:postgres)` |
-| | postgresql | Passed | 12 | `3m 19s` | `umbrella_live: 42s` |
-| | sqlite3 / none | Passed | 17 | `2m 38s` | `umbrella_defaults: 36s` |
-| | mysql | Passed | 12 | `2m 04s` | `mysql_auth_live: 38s` |
-| | mssql | Passed | 12 | `1m 32s` | `mssql_auth_html: 32s` |
+| **1.20 / 29** | **Combined** | **Passed** | **53** | **`3m 19s`** | `UmbrellaPostgres`: auth live (`42s`) |
+| | PostgreSQL | Passed | 24 | `3m 19s` | `UmbrellaPostgres`: auth live (`42s`) |
+| | SQLite3 + no-DB | Passed | 14 | `2m 38s` | `UmbrellaDefaults`: defaults (`36s`) |
+| | MySQL | Passed | 8 | `2m 04s` | `AppWithMySQL`: auth live (`38s`) |
+| | MSSQL | Passed | 7 | `1m 32s` | `AppWithMSSQL`: auth html (`32s`) |
 
 <!--
 Speaker notes:
@@ -678,7 +828,7 @@ Speaker notes:
 
 ## The Payoff: 10 Minutes $\rightarrow$ 3m 35s!
 
-Real CI wall-clock metrics from GitHub Actions Run **33897992674**:
+Real CI wall-clock metrics from GitHub Actions Run [**33897992674**](https://github.com/phoenixframework/phoenix/actions/runs/33897992674/attempts/1#summary-101106087612):
 
 <div class="grid-3" style="margin-bottom: 16px;">
   <div class="metric-box">
@@ -690,19 +840,20 @@ Real CI wall-clock metrics from GitHub Actions Run **33897992674**:
     <div class="metric-lbl">OPTIMIZED WALL TIME</div>
   </div>
   <div class="metric-box">
-    <div class="metric-val" style="color: #38bdf8;">~65%</div>
+    <div class="metric-val" style="color: var(--color-phoenix);">~65%</div>
     <div class="metric-lbl">TOTAL TIME SAVED</div>
   </div>
 </div>
 
-* `npm test`: 17s
-* `installer test`: 36s
-* `mix test`: 56s
-* `integration test [mssql]`: 1m 32s
-* `integration test [mysql]`: 2m 04s
-* `integration test [sqlite3 + no-db]`: 2m 38s
-* `integration test [postgresql]`: **3m 19s** <span style="color: var(--color-primary); font-weight: bold;">(Critical Path)</span>
-* `integration test results` (aggregator): 12s
+* Breakdown:  
+  `npm test`: 17s  
+  `installer test`: 36s  
+  `mix test`: 56s  
+  `integration test [mssql]`: 1m 32s  
+  `integration test [mysql]`: 2m 04s  
+  `integration test [sqlite3 + no-db]`: 2m 38s  
+  `integration test [postgresql]`: **3m 19s** <span style="color: var(--color-primary); font-weight: bold;">(Critical Path)</span>  
+  `integration test results` (aggregator): 12s
 
 <!--
 Speaker notes:
@@ -719,16 +870,16 @@ Speaker notes:
 CI improvements should **never** make local development painful!
 
 * **Apple Silicon (`arm64`) Auto-Detection in `docker.sh`:**
-  * Official Microsoft SQL Server image only supports `amd64`.
-  * Detects architecture via `uname -m`; automatically skips MSSQL on ARM64 macs instead of crashing under emulation.
+  - Official Microsoft SQL Server image only supports `amd64`.
+  - Detects architecture via `uname -m`; automatically skips MSSQL on ARM64 macs instead of crashing under emulation.
 * **Warm Database Containers:**
-  * `docker.sh` keeps database containers alive between runs.
-  * Re-running tests has **zero container boot latency**!
-  * Run `./docker.sh down` when you're done for the day.
+  - `docker.sh` keeps database containers alive between runs.
+  - Re-running tests has **zero container boot latency**!
+  - Run `./docker.sh down` when you're done for the day.
 * **Non-Root & Port Isolation:**
-  * Container runs as non-root user (no root-owned file pollution).
-  * Named volumes for native NIFs (`bcrypt`, `argon2`).
-  * Database ports bind to loopback (`127.0.0.1`), preventing host port collisions.
+  - Container runs as non-root user (no root-owned file pollution).
+  - Named volumes for native NIFs (`bcrypt`, `argon2`).
+  - Database ports bind to loopback (`127.0.0.1`), preventing host port collisions.
 
 <!--
 Speaker notes:
@@ -777,12 +928,13 @@ Speaker notes:
 
 ---
 
-<!-- _class: lead -->
+<!--
+_class: lead
+_header: ''
+-->
 ## Software Testing Day
 
-<div class="center-img">
-  <img src="assets/xkcd_2928_software_testing_day.png" alt="XKCD 2928: Software Testing Day" />
-</div>
+![h:400 drop-shadow](assets/xkcd_2928_software_testing_day.png)
 
 <p style="text-align: center; font-size: 0.75em; color: var(--color-muted); margin-top: 10px;">
   <em>"Celebrated every -1 years on January 0th at 25:71 PM."</em> (XKCD #2928)
@@ -797,7 +949,7 @@ Speaker notes:
 
 ---
 
-## Key Takeaways for Any Elixir Project
+## Key Takeaways
 
 1. **Measure Before Optimizing:**
    Beware of built-in flags that alter runtime semantics (like `mix test --slowest` forcing `--trace`).
@@ -818,23 +970,44 @@ Speaker notes:
 
 ---
 
-<!-- _class: lead -->
+<!--
+_class: lead
+_paginate: skip
+_header: ''
+_footer: ''
+-->
 # Thank You! Questions?
 
-**Rodolfo Carvalho** · `@rhcarvalho`
-*Elixir Vienna · September 24, 2026*
+**Rodolfo Carvalho** · [@rhcarvalho](https://github.com/rhcarvalho) · [<img class="inline-logo" src="assets/praialabs-logo.svg" alt="" />praialabs.com](https://www.praialabs.com/)
 
-### Upstream References
-* **PR #6817:** Add `SummaryFormatter` for integration test visibility in CI
-* **PR #6825:** Decompose CI workflow steps & improve container reliability
-* **PR #6826:** Split integration test suites into 33 async modules & lane scheduling
-* **PR #6830:** Eliminate `Process.sleep` via backdated migration timestamps
-* **PR #6831 / #6833:** Native host runner, tmpfs RAM disks, and cleanup
-* **PR #6836:** Database sharding & cross-shard summary aggregation
+<div style="margin-top: 36px; padding: 18px 28px; background: #1c1917; border-radius: 8px; border: 1px solid #292524; font-size: 0.85em; text-align: center;">
+  ❤️ Special thanks to <strong>Steffen Deusch</strong> (<a href="https://github.com/SteffenDE">@SteffenDE</a>) for co-maintaining Phoenix, exploring partition schemes, and reviewing PRs with patience and great insights!
+</div>
 
 <!--
 Speaker notes:
-- Thank you everyone!
-- All these PRs are open or merged in phoenixframework/phoenix.
-- Happy to answer any questions about ExUnit concurrency, Docker setups, or Elixir AST tools!
+- Thank you everyone for your time!
+- A huge, heartfelt thank you to Steffen Deusch (@SteffenDE). He has been doing fantastic work maintaining Phoenix and spent hours exploring partition ideas with me and reviewing these PRs.
+- Also thanks to Chris McCord, José Valim, and the whole Phoenix Core team for building and stewarding such an incredible framework.
+- Happy to take any questions!
+-->
+
+---
+
+<!-- _header: Appendix -->
+
+## Appendix: Upstream Pull Requests
+
+- **[PR #6817](https://github.com/phoenixframework/phoenix/pull/6817)**: Add `SummaryFormatter` for integration test visibility in CI
+- **[PR #6825](https://github.com/phoenixframework/phoenix/pull/6825)**: Decompose CI workflow steps & improve container reliability
+- **[PR #6826](https://github.com/phoenixframework/phoenix/pull/6826)**: Split integration test suites into 33 async modules & lane scheduling
+- **[PR #6830](https://github.com/phoenixframework/phoenix/pull/6830)**: Eliminate `Process.sleep` via backdated migration timestamps
+- **[PR #6831](https://github.com/phoenixframework/phoenix/pull/6831)**: Run integration tests on host runner in CI with `actions/cache` & `tmpfs`
+- **[PR #6833](https://github.com/phoenixframework/phoenix/pull/6833)**: Consolidate temporary app generation to `installer/tmp` and fix directory leak
+- **[PR #6836](https://github.com/phoenixframework/phoenix/pull/6836)**: Shard integration tests by database with on-demand container setup in CI
+
+<!--
+Speaker notes:
+- Annex slide for distribution and reference.
+- All PRs are open or merged upstream at github.com/phoenixframework/phoenix.
 -->
