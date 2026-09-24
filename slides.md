@@ -925,13 +925,20 @@ _footer: ''
 -->
 # Thank You! Questions?
 
-<div style="display: inline-block; text-align: left; margin: 16px auto 0; font-size: 1.05em; line-height: 1.7;">
-  <div><strong>Rodolfo Carvalho</strong></div>
-  <div><a href="https://www.praialabs.com/"><img class="inline-logo" src="assets/praialabs-logo.svg" alt="" />praialabs.com</a></div>
-  <div>GitHub: <a href="https://github.com/rhcarvalho">@rhcarvalho</a></div>
+<div style="display: flex; justify-content: center; align-items: flex-end; gap: 48px; margin: 24px auto 0;">
+  <div style="text-align: left; font-size: 1.05em; display: flex; flex-direction: column; gap: 14px;">
+    <div style="font-size: 1.15em; font-weight: 700; color: #ffffff; line-height: 1.2;">Rodolfo Carvalho</div>
+    <div style="line-height: 1.2;"><a href="https://www.praialabs.com/"><img class="inline-logo" src="assets/praialabs-logo.svg" alt="" />praialabs.com</a></div>
+    <div style="line-height: 1.2;">GitHub: <a href="https://github.com/rhcarvalho">@rhcarvalho</a></div>
+  </div>
+
+  <div style="text-align: center;">
+    <img src="assets/qr-slides.svg" alt="QR Code for Slides" style="display: block; width: 130px; height: 130px; border-radius: 8px; box-shadow: 0 4px 14px rgba(0,0,0,0.5);" />
+    <div style="font-size: 0.62em; color: var(--color-muted); margin-top: 6px; font-family: monospace; line-height: 1.2;">praialabs.github.io/optimizing-phoenix-ci</div>
+  </div>
 </div>
 
-<div style="max-width: 760px; margin: 36px auto 0; padding: 18px 28px; background: #1c1917; border-radius: 8px; border: 1px solid #292524; font-size: 0.82em; text-align: center; line-height: 1.5;">
+<div style="max-width: 760px; margin: 28px auto 0; padding: 16px 24px; background: #1c1917; border-radius: 8px; border: 1px solid #292524; font-size: 0.8em; text-align: center; line-height: 1.5;">
   💜 Special thanks to <a href="https://github.com/SteffenDE"><strong>Steffen Deusch</strong></a> for maintaining Phoenix, exploring partition schemes, and reviewing PRs with patience and great insights!
 </div>
 
