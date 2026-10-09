@@ -1056,6 +1056,7 @@ Speaker notes:
 - **[PR #6831](https://github.com/phoenixframework/phoenix/pull/6831)**: Run integration tests on host runner in CI with `actions/cache` & `tmpfs`
 - **[PR #6833](https://github.com/phoenixframework/phoenix/pull/6833)**: Consolidate temporary app generation to `installer/tmp` and fix directory leak
 - **[PR #6836](https://github.com/phoenixframework/phoenix/pull/6836)**: Shard integration tests by database with on-demand container setup in CI
+- **[PR #6873](https://github.com/phoenixframework/phoenix/pull/6873)**: Improve local integration test workflow
 
 <!--
 Speaker notes:
